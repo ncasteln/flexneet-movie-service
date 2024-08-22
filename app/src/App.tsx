@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import Navigation from './Navigation';
 import { Container } from 'react-bootstrap';
-import { Content } from './Content';
+import {  IMovie } from './Movies';
+import { Movies } from './Movies';
+import { isValidYear } from './utils';
 
 // https://github.com/prust/wikipedia-movie-data
 
@@ -9,32 +11,26 @@ export type TYear = 1960 | 1970 | 1980 | 1990 | 2000 | 2010 | 2020 | null;
 
 export default function App() {
 	const [year, setYear] = useState<TYear>(2020);
-	const [data, setData] = useState();
+	const [movies, setMovies] = useState<IMovie[] | null>(null);
 
 	useEffect(() => {
-		let ignore = false;
+		// let ignore = false;
 
 		async function fetchData() {
 			const response = await fetch(`../data/movies-${year}s.json`);
-			const newData = await response.json();
-			if (!ignore) {
-				setData(newData);
-				console.log(newData);
-			}
+			const newMovies: IMovie[] = await response.json();
+			// if (!ignore) {
+				setMovies(newMovies);
+				console.log(newMovies);
+			// }
 		}
 
 		setTimeout(() => { // added only to simulate the loading animation
 			fetchData();
-		}, 2000);
+		}, 1000);
 
-		return () => { ignore = true; }
+		// return () => { ignore = true; }
 	}, [year])
-
-	const isValidYear = (year: number | null): year is TYear => {
-		if (!year || [1960, 1970, 1980, 1990, 2000, 2010, 2020].includes(year))
-			return (true);
-		return (false);
-	}
 
 	const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
@@ -42,15 +38,21 @@ export default function App() {
 		if (!text)
 			console.warn("textContent is null");
 		const newYear = Number(text);
-		if (isValidYear(newYear) && newYear != year)
+		if (isValidYear(newYear) && newYear != year) {
+			setMovies(null);
 			setYear(newYear);
+		}
 	}
 
 	return (
 	<Container >
 		<Navigation onClick={handleClick} />
-		<h1>Year: {year ? year : "My list"}</h1>
-		<Content data={data ? data : null} />
+		<h2 className='pt-5'>Year: {year ? year : "My list"}</h2>
+		{
+			movies
+				? <Movies year={year} movies={movies} />
+				: "Loading animation..."
+		}
 	</Container>
 	)
 }
