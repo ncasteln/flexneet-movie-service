@@ -1,6 +1,7 @@
-import { getRandomSelection } from "./utils";
+import { getRandomSelection, sortBy, } from "./utils";
 import { TYear } from "./App";
 import { useState } from "react";
+import { Button, Dropdown } from "react-bootstrap";
 
 export interface IMovie {
 	title: string,
@@ -43,24 +44,56 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
 	}
 
 	const renderAll = () => {
-		return (movies.map((movie, i) => {
+		const sortedMovies: IMovie[] | null = sortBy(movies, sort);
+		if (!sortedMovies)
+			throw new Error("Error: sorting function failed");
+		return (sortedMovies.map((movie, i) => {
 			return (
 				<div>
-					<small key={"all-movie-" + i}>{i}-{movie.title}</small>
+					<small key={"all-movie-" + i}>{movie.year} - {movie.title} - {movie.genres[0]}</small>
 					<br />
 				</div>
 			)
 		}))
 	}
 
-	return (
-		<>
-		<h2>Suggested</h2>
-		{ renderRandomSelection() }
-		<h2>Ordered</h2>
-		<h2>Sort by: {sort}</h2>
-		{ renderAll() }
-		</>
+	const renderSortOptions = () => {
+		const sortOptions = Object.values(TSort);
+		return (sortOptions.map((option, i) => {
+			return (<Dropdown.Item as={Button}
+				key={`sortOption-${i}`}
+				onClick={handleSort}>
+					{option}
+				</Dropdown.Item>)
+		}))
+	}
 
+	const handleSort = (e: React.MouseEvent<HTMLElement>) => {
+		e.preventDefault();
+		if (e.currentTarget.textContent) {
+			const sortOptions = Object.values(TSort);
+			const newSort = sortOptions.filter((value) => {
+				return (value === e.currentTarget.textContent)
+			})
+			setSort(newSort[0]);
+		}
+	}
+
+	return (
+	<>
+		<h2 className='pt-5'>Year: {year ? year : "My list"}</h2>
+		<h2>Suggested</h2>
+		{/* { renderRandomSelection() } */}
+		<h2>Ordered</h2>
+		<Dropdown>
+			<Dropdown.Toggle variant="success" id="dropdown-basic">
+				Sorted by: {sort}
+			</Dropdown.Toggle>
+			<Dropdown.Menu>
+				{ renderSortOptions() }
+			</Dropdown.Menu>
+		</Dropdown>
+		{ renderAll() }
+	</>
 	)
 }

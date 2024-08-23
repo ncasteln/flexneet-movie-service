@@ -14,22 +14,21 @@ export default function App() {
 	const [movies, setMovies] = useState<IMovie[] | null>(null);
 
 	useEffect(() => {
-		// let ignore = false;
-
 		async function fetchData() {
 			const response = await fetch(`../data/movies-${year}s.json`);
 			const newMovies: IMovie[] = await response.json();
-			// if (!ignore) {
-				setMovies(newMovies);
-				console.log(newMovies);
-			// }
+			setMovies(newMovies);
+			console.log(newMovies);
 		}
 
-		setTimeout(() => { // added only to simulate the loading animation
+		let timerId = setTimeout(() => { // added only to simulate the loading animation
+			console.info("Info: Fetching data in...");
 			fetchData();
-		}, 1000);
+		}, 2000);
 
-		// return () => { ignore = true; }
+		return () => {
+			console.warn("Warning: clean up fetch()");
+			clearTimeout(timerId); }
 	}, [year])
 
 	const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -47,7 +46,6 @@ export default function App() {
 	return (
 	<Container >
 		<Navigation onClick={handleClick} />
-		<h2 className='pt-5'>Year: {year ? year : "My list"}</h2>
 		{
 			movies
 				? <Movies year={year} movies={movies} />

@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { NavDropdown } from "react-bootstrap";
 import { TYear } from "./App";
-import { IMovie } from "./Movies";
+import { IMovie, TSort } from "./Movies";
 
 export const isValidYear = (year: number | null): year is TYear => {
 	if (!year || [1960, 1970, 1980, 1990, 2000, 2010, 2020].includes(year))
@@ -46,4 +46,48 @@ export const getRandomSelection = ( movies: IMovie[] ): IMovie[] => {
 
 	console.log("random: ", randomMovies);
 	return (randomMovies);
+}
+
+const AtoZ = ( a: IMovie, b: IMovie ): number => {
+	if (a.title < b.title) return (-1)
+	else if (a.title === b.title) return (0)
+	return (1);
+}
+const ZtoA = ( a: IMovie, b: IMovie ): number => {
+	if (a.title > b.title) return (-1)
+	else if (a.title === b.title) return (0)
+	return (1);
+}
+const oldToNew = ( a: IMovie, b: IMovie ): number => {
+	if (a.year < b.year) return (-1)
+	else if (a.year === b.year) return (0)
+	return (1);
+}
+const newToOld = ( a: IMovie, b: IMovie ): number => {
+	if (a.year > b.year) return (-1)
+	else if (a.year === b.year) return (0)
+	return (1);
+}
+const genre = ( a: IMovie, b: IMovie ): number => {
+	if (a.genres[0] < b.genres[0]) return (-1)
+	else if (a.genres[0] === b.genres[0]) return (0)
+	return (1);
+}
+
+export const sortBy = ( movies: IMovie[], sort: TSort ): IMovie[] | null => {
+	switch (sort) {
+		case TSort.ALPHA:
+			return (movies.sort(AtoZ));
+		case TSort.ALPHA_REV:
+			return (movies.sort(ZtoA));
+		case TSort.YEAR:
+			return (movies.sort(oldToNew));
+		case TSort.YEAR_REV:
+			return (movies.sort(newToOld));
+		case TSort.GENRE:
+			return (movies.sort(genre));
+		default:
+			break;
+	}
+	return (null);
 }
