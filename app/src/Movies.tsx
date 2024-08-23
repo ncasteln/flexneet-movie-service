@@ -1,7 +1,8 @@
-import { getRandomSelection, sortBy, } from "./utils";
+import { divideByCategory, getRandomSelection, sortBy, } from "./utils";
 import { TYear } from "./App";
 import { useState } from "react";
 import { Button, Dropdown } from "react-bootstrap";
+import { Preview } from "./Preview";
 
 export interface IMovie {
 	title: string,
@@ -20,6 +21,13 @@ interface IMoviesProps {
 	year: TYear
 }
 
+export type TCategory = string | number | null | undefined;
+
+export interface ISortedAndDivided {
+	category: TCategory,
+	movies: IMovie[]
+}
+
 export enum TSort {
 	ALPHA = "from a to z",
 	ALPHA_REV = "from z to a",
@@ -35,8 +43,8 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
 		const randomMovies: IMovie[] = getRandomSelection(movies);
 		return (randomMovies.map((movie, i) => {
 			return (
-				<div>
-					<small key={"random-movie-" + i}>{i}-{movie.title}</small>
+				<div key={"random-movie-" + i}>
+					<small >{i}-{movie.title}</small>
 					<br />
 				</div>
 			)
@@ -47,14 +55,31 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
 		const sortedMovies: IMovie[] | null = sortBy(movies, sort);
 		if (!sortedMovies)
 			throw new Error("Error: sorting function failed");
-		return (sortedMovies.map((movie, i) => {
+
+		const sortAndDivided: ISortedAndDivided[] = divideByCategory(sortedMovies, sort);
+
+		return (sortAndDivided.map(({ category, movies }, i) => {
 			return (
-				<div>
-					<small key={"all-movie-" + i}>{movie.year} - {movie.title} - {movie.genres[0]}</small>
-					<br />
-				</div>
-			)
+			<div>
+				<h2>{category}</h2>
+				{ movies.map(movie => {
+					return <Preview movie={movie} index={i} />
+				})}
+			</div>)
 		}))
+
+		// return (sortedMovies.map((movie, i, array) => {
+		// 	let currCategory: string | number | null | undefined = getCategoryToDisplay(movie);
+		// 	let prevCategory = getCategoryToDisplay(array[i - 1]);
+		// 	if (prevCategory === null)
+		// 		throw new Error("Error: display category function failed");
+		// 	if (prevCategory === undefined || currCategory != prevCategory) {
+		// 		return (<>
+		// 			<h2>{currCategory}</h2>
+		// 			<Preview movie={movie} index={i} /></>)
+		// 	}
+		// 	return <Preview movie={movie} index={i} />
+		// }))
 	}
 
 	const renderSortOptions = () => {
@@ -84,7 +109,6 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
 		<h2 className='pt-5'>Year: {year ? year : "My list"}</h2>
 		<h2>Suggested</h2>
 		{/* { renderRandomSelection() } */}
-		<h2>Ordered</h2>
 		<Dropdown>
 			<Dropdown.Toggle variant="success" id="dropdown-basic">
 				Sorted by: {sort}

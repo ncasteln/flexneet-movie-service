@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { NavDropdown } from "react-bootstrap";
 import { TYear } from "./App";
-import { IMovie, TSort } from "./Movies";
+import { IMovie, ISortedAndDivided, TCategory, TSort } from "./Movies";
 
 export const isValidYear = (year: number | null): year is TYear => {
 	if (!year || [1960, 1970, 1980, 1990, 2000, 2010, 2020].includes(year))
@@ -68,10 +68,16 @@ const newToOld = ( a: IMovie, b: IMovie ): number => {
 	else if (a.year === b.year) return (0)
 	return (1);
 }
-const genre = ( a: IMovie, b: IMovie ): number => {
-	if (a.genres[0] < b.genres[0]) return (-1)
-	else if (a.genres[0] === b.genres[0]) return (0)
-	return (1);
+const sortByGenre = ( movies: IMovie[] ): IMovie[] => {
+	const genres: string[] = [ "Action", "Adventure", "Animated", "Biography", "Comedy", "Crime", "Dance", "Disaster", "Documentary", "Drama", "Erotic", "Family", "Fantasy", "Found Footage", "Historical", "Horror", "Independent", "Legal", "Live Action", "Martial Arts", "Musical", "Mystery", "Noir", "Performance", "Political", "Romance", "Satire", "Science Fiction", "Short", "Silent", "Slasher", "Sports", "Spy", "Superhero", "Supernatural", "Suspense", "Teen", "Thriller", "War", "Western" ];
+	const sortedArray: IMovie[] = []
+	genres.forEach(genre => {
+		movies.filter((movie) => {
+			if (movie.genres[0] === genre)
+				sortedArray.push(movie)
+		})
+	});
+	return (sortedArray);
 }
 
 export const sortBy = ( movies: IMovie[], sort: TSort ): IMovie[] | null => {
@@ -85,9 +91,45 @@ export const sortBy = ( movies: IMovie[], sort: TSort ): IMovie[] | null => {
 		case TSort.YEAR_REV:
 			return (movies.sort(newToOld));
 		case TSort.GENRE:
-			return (movies.sort(genre));
+			return (sortByGenre(movies));
 		default:
 			break;
 	}
 	return (null);
+}
+
+const getCategoryToDisplay = ( movie: IMovie, sort: TSort ) => {
+	if (movie === undefined)
+		return (undefined)
+	switch (sort) {
+		case TSort.ALPHA:
+		case TSort.ALPHA_REV:
+			return (movie.title[0]);
+		case TSort.YEAR:
+		case TSort.YEAR_REV:
+			return (movie.year);
+		case TSort.GENRE:
+			return (movie.genres[0]);
+		default:
+			break;
+	}
+	return (null);
+}
+
+export const divideByCategory = ( sortedMovies: IMovie[], sort: TSort ): ISortedAndDivided[] => {
+	const sortedAndDivided: ISortedAndDivided[] = [];
+	sortedMovies.forEach((movie, i, array) => {
+		let currCategory: TCategory = getCategoryToDisplay(movie, sort);
+		let prevCategory = getCategoryToDisplay(array[i - 1], sort);
+		if (prevCategory === null)
+			throw new Error("Error: display category function failed");
+		if (prevCategory === undefined || currCategory != prevCategory) {
+			sortedAndDivided.push({
+				category: currCategory,
+				movies: []
+			})
+		}
+		sortedAndDivided[sortedAndDivided.length - 1].movies.push(movie);
+	})
+	return (sortedAndDivided);
 }
