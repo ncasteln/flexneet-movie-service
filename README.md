@@ -51,6 +51,10 @@ useEffect(() => {
 ## Try it out!
 
 ## To do
-1) Not sure about logic between App and Movies, in relation to the random movies, why more than one console.log ?
-2) clean-up for useEffect still not properly clear
-3) Divide results into pages or not ?
+1) Style accuratley the grid/list view in MovieBlock.tsx:
+	- grid system and behavior
+	- list style and behavior
+2) <MyList /> component
+3) MoviePreview component:
+	- Open modal (MovieCard.tsx component to create) when clicked with all the data
+	- Set an "Image not available"

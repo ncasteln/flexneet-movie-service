@@ -1,12 +1,11 @@
 import { IMovie, TSort } from "./Movies"
 
-interface IPreviewProps {
+interface IMoviePreviewProps {
 	movie: IMovie,
 	index: number
 }
 
-export const Preview = ({ movie, index }: IPreviewProps) => {
-
+export const MoviePreview = ({ movie, index }: IMoviePreviewProps) => {
 	return (
 		<>
 			<div key={`movie-${index}`}>

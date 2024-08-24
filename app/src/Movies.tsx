@@ -1,8 +1,9 @@
 import { divideByCategory, getRandomSelection, sortBy, } from "./utils";
 import { TYear } from "./App";
 import { useState } from "react";
-import { Button, Dropdown } from "react-bootstrap";
-import { Preview } from "./Preview";
+import { Button, Container, Dropdown } from "react-bootstrap";
+import { MoviePreview } from "./MoviePreview";
+import { MovieBlock } from "./MovieBlock";
 
 export interface IMovie {
 	title: string,
@@ -11,7 +12,7 @@ export interface IMovie {
 	genres: string[],
 	href: string,
 	extract: string,
-	thumbnail: URL, //"https://upload.wikimedia.org/wikipedia/en/3/34/The_Grudge_2020_Poster.jpeg"
+	thumbnail: string, //"https://upload.wikimedia.org/wikipedia/en/3/34/The_Grudge_2020_Poster.jpeg"
 	thumbnail_width: number,
 	thumbnail_height: number
 }
@@ -36,10 +37,13 @@ export enum TSort {
 	GENRE = "by genre"
 }
 
+export type TDisplayMode = "display-list" | "display-grid"
+
 export const Movies = ({ movies, year }: IMoviesProps) => {
 	const [sort, setSort] = useState<TSort>(TSort.ALPHA);
+	const [displayMode, setDisplayMode] = useState<TDisplayMode>("display-list");
 
-	const renderRandomSelection = () => {
+	const renderRandomMovies = () => {
 		const randomMovies: IMovie[] = getRandomSelection(movies);
 		return (randomMovies.map((movie, i) => {
 			return (
@@ -51,7 +55,7 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
 		}))
 	}
 
-	const renderAll = () => {
+	const renderAllMovies = () => {
 		const sortedMovies: IMovie[] | null = sortBy(movies, sort);
 		if (!sortedMovies)
 			throw new Error("Error: sorting function failed");
@@ -59,27 +63,12 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
 		const sortAndDivided: ISortedAndDivided[] = divideByCategory(sortedMovies, sort);
 
 		return (sortAndDivided.map(({ category, movies }, i) => {
-			return (
-			<div>
-				<h2>{category}</h2>
-				{ movies.map(movie => {
-					return <Preview movie={movie} index={i} />
-				})}
-			</div>)
+			return <MovieBlock
+				category={category}
+				movies={movies}
+				display={displayMode}
+				categoryIndex={i} />
 		}))
-
-		// return (sortedMovies.map((movie, i, array) => {
-		// 	let currCategory: string | number | null | undefined = getCategoryToDisplay(movie);
-		// 	let prevCategory = getCategoryToDisplay(array[i - 1]);
-		// 	if (prevCategory === null)
-		// 		throw new Error("Error: display category function failed");
-		// 	if (prevCategory === undefined || currCategory != prevCategory) {
-		// 		return (<>
-		// 			<h2>{currCategory}</h2>
-		// 			<Preview movie={movie} index={i} /></>)
-		// 	}
-		// 	return <Preview movie={movie} index={i} />
-		// }))
 	}
 
 	const renderSortOptions = () => {
@@ -104,11 +93,19 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
 		}
 	}
 
+	const handleDisplayMode = (e: React.MouseEvent<HTMLElement>) => {
+		e.preventDefault();
+		if (e.currentTarget.id === "display-list" || e.currentTarget.id === "display-grid")
+			setDisplayMode(e.currentTarget.id);
+	}
+
 	return (
 	<>
 		<h2 className='pt-5'>Year: {year ? year : "My list"}</h2>
+
 		<h2>Suggested</h2>
-		{/* { renderRandomSelection() } */}
+		{/* { renderRandomMovies() } */}
+
 		<Dropdown>
 			<Dropdown.Toggle variant="success" id="dropdown-basic">
 				Sorted by: {sort}
@@ -117,7 +114,15 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
 				{ renderSortOptions() }
 			</Dropdown.Menu>
 		</Dropdown>
-		{ renderAll() }
+
+		<Container>
+			<Button id="display-list" onClick={handleDisplayMode}>List</Button>
+			<Button id="display-grid" onClick={handleDisplayMode}>Grid</Button>
+		</Container>
+
+		<Container>
+			{ renderAllMovies() }
+		</Container>
 	</>
 	)
 }
