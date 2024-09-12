@@ -1,9 +1,9 @@
 import { divideByCategory, getRandomSelection, sortBy, } from "./utils";
 import { TYear } from "./App";
 import { useState } from "react";
-import { Button, Container, Dropdown } from "react-bootstrap";
-import { MoviePreview } from "./MoviePreview";
+import { Button, Container, Dropdown, Modal } from "react-bootstrap";
 import { MovieBlock } from "./MovieBlock";
+import { MovieModal } from "./MovieModal";
 
 export interface IMovie {
 	title: string,
@@ -42,13 +42,14 @@ export type TDisplayMode = "display-list" | "display-grid"
 export const Movies = ({ movies, year }: IMoviesProps) => {
 	const [sort, setSort] = useState<TSort>(TSort.ALPHA);
 	const [displayMode, setDisplayMode] = useState<TDisplayMode>("display-list");
+	const [movieModal, setMovieModal] = useState<IMovie | null>(null);
 
 	const renderRandomMovies = () => {
 		const randomMovies: IMovie[] = getRandomSelection(movies);
 		return (randomMovies.map((movie, i) => {
 			return (
 				<div key={"random-movie-" + i}>
-					<small >{i}-{movie.title}</small>
+					<small>{i}-{movie.title}</small>
 					<br />
 				</div>
 			)
@@ -67,7 +68,8 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
 				category={category}
 				movies={movies}
 				display={displayMode}
-				categoryIndex={i} />
+				categoryIndex={i}
+				setMovieModal={setMovieModal} />
 		}))
 	}
 
@@ -123,6 +125,10 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
 		<Container>
 			{ renderAllMovies() }
 		</Container>
+
+		<MovieModal
+			movie={movieModal}
+			setMovieModal={setMovieModal} />
 	</>
 	)
 }
