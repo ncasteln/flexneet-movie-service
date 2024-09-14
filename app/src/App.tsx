@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import Navigation from './Navigation';
-import { CardFooter, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import {  IMovie } from './Movies';
 import { Movies } from './Movies';
 import { isValidYear } from './utils';
+import { Sidebar } from './Sidebar';
 
 // https://github.com/prust/wikipedia-movie-data
 
@@ -46,11 +47,8 @@ export default function App() {
   return (
     <>
       <Navigation onClick={handleClick} />
-      {
-        movies
-          ? <Movies year={year} movies={movies} />
-          : "Loading animation..."
-      }
+      {/* <Sidebar /> */}
+      <Movies year={year} movies={movies} />
     </>
   )
 }

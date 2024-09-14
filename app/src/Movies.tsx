@@ -1,7 +1,7 @@
 import { divideByCategory, getRandomSelection, sortBy, } from "./utils";
 import { TYear } from "./App";
 import { useState } from "react";
-import { Button, Col, Container, Dropdown, Modal, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Modal, Row, Spinner } from "react-bootstrap";
 import { MovieCategory } from "./MovieCategory";
 import { MovieModal } from "./MovieModal";
 
@@ -18,7 +18,7 @@ export interface IMovie {
 }
 
 interface IMoviesProps {
-  movies: IMovie[],
+  movies: IMovie[] | null,
   year: TYear
 }
 
@@ -45,32 +45,21 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
   const [movieModal, setMovieModal] = useState<IMovie | null>(null);
 
   const renderRandomMovies = () => {
+    if (!movies)
+      throw new Error("Error: renderRandomMovies(): movies is null")
     const randomMovies: IMovie[] = getRandomSelection(movies);
-    return (randomMovies.map((movie, i) => {
-      return (
-        <div key={"random-movie-" + i}>
-          <small>{i}-{movie.title}</small>
-          <br />
-        </div>
-      )
-    }))
+    return (randomMovies)
   }
 
   const renderAllMovies = () => {
+    if (!movies)
+      throw new Error("Error: renderAllMovies(): movies is null");
     const sortedMovies: IMovie[] | null = sortBy(movies, sort);
     if (!sortedMovies)
-      throw new Error("Error: sorting function failed");
+      throw new Error("Error: renderAllMovies(): sortedMovies is null");
 
     const sortAndDivided: ISortedAndDivided[] = divideByCategory(sortedMovies, sort);
-
-    return (sortAndDivided.map(({ category, movies }, i) => {
-      return <MovieCategory
-        category={category}
-        movies={movies}
-        display={displayMode}
-        categoryIndex={i}
-        setMovieModal={setMovieModal} />
-    }))
+    return (sortAndDivided);
   }
 
   const renderSortOptions = () => {
@@ -101,37 +90,62 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
       setDisplayMode(e.currentTarget.id);
   }
 
+  if (!movies) {
+    return (
+      <Container className="py-3 my-5">
+        <Spinner animation="border" variant="primary" />
+      </Container>
+    )
+  }
   return (
-  <Container className="py-3 my-5 border">
+    <Container className="py-3 my-5 border"> {/* Change default p-5 or create a new class */}
 
-    {/* <h3>Suggested movies</h3> */}
-    {/* { renderRandomMovies() } */}
+      {/* <h3>Suggested movies</h3> */}
+      {/* {
+        renderRandomMovies().map((movie, i) => {
+          return (
+            <div key={"random-movie-" + i}>
+              <small>{i}-{movie.title}</small>
+              <br />
+            </div>
+          )
+        })
+      } */}
 
-    <Row className="border">
-      <Col className="">
-        <h2>{year ? year : "My list"}</h2>
-      </Col>
-      <Col className="">
-        <Dropdown>
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
-            Sorted by: {sort}
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            { renderSortOptions() }
-          </Dropdown.Menu>
-        </Dropdown>
-      </Col>
-      <Col className="d-flex justify-content-end gap-2">
-        <Button id="display-list" onClick={handleDisplayMode}>List</Button>
-        <Button id="display-grid" onClick={handleDisplayMode}>Grid</Button>
-      </Col>
-    </Row>
+      <Row className="border">
+        <Col className="">
+          <h2 className="bg-warning">{year ? year : "My list"}</h2>
+        </Col>
+        <Col className="">
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              List by: {sort}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              { renderSortOptions() }
+            </Dropdown.Menu>
+          </Dropdown>
+        </Col>
+        <Col className="d-flex justify-content-end gap-2">
+          <Button id="display-list" onClick={handleDisplayMode}>List</Button>
+          <Button id="display-grid" onClick={handleDisplayMode}>Grid</Button>
+        </Col>
+      </Row>
 
-    { renderAllMovies() }
+      {
+        renderAllMovies().map(({ category, movies }) => {
+          return <MovieCategory
+            key={`movie-category-${category}`}
+            category={category}
+            movies={movies}
+            display={displayMode}
+            setMovieModal={setMovieModal} />
+        })
+      }
 
-    <MovieModal
-      movie={movieModal}
-      setMovieModal={setMovieModal} />
-  </Container>
+      <MovieModal
+        movie={movieModal}
+        setMovieModal={setMovieModal} />
+    </Container>
   )
 }

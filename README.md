@@ -51,6 +51,8 @@ useEffect(() => {
 ## Try it out!
 
 ## To do
+0) Add new paddings in custom.scss and recompile css file AND/OR use --watch flag in the continaer
+
 1) Style accuratley the grid/list view in MovieBlock.tsx:
 	- grid system and behavior
 	- list style and behavior
