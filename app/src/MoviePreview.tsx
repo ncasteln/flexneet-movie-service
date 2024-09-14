@@ -1,18 +1,33 @@
-import { IMovie, TSort } from "./Movies"
+import { Table } from "react-bootstrap"
+import { IMovie } from "./Movies"
 
-interface IMoviePreviewProps {
-	movie: IMovie,
-	index: number
+interface IMovieTableProps {
+  movies: IMovie[]
 }
 
-export const MoviePreview = ({ movie, index }: IMoviePreviewProps) => {
-	return (
-		<>
-			<div key={`movie-${index}`}>
-				<small>
-					{movie.year} - {movie.title} - {movie.genres[0]}
-				</small>
-				<br />
-			</div>
-		</>)
+export const MovieTable = ({ movies }: IMovieTableProps) => {
+  return (
+    <>
+      <Table striped bordered hover>
+        <thead>
+          <th>Year</th>
+          <th>Title</th>
+          <th>Genre</th>
+        </thead>
+        <tbody>
+          {
+            movies.map((movie, i) => {
+              return (
+                <tr key={`movie-${i}`}>
+                  <td>{movie.year}</td>
+                  <td>{movie.title}</td>
+                  <td>{movie.genres.length > 0 ? movie.genres[0] : "<Empty>"}</td>
+                </tr>
+              )
+            })
+          }
+        </tbody>
+      </Table>
+    </>
+  )
 }
