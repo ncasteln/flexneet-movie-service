@@ -1,10 +1,10 @@
 import { ReactElement } from "react";
 import { NavDropdown } from "react-bootstrap";
-import { TYear } from "./App";
+import { TListTitle } from "./App";
 import { IMovie, ISortedAndDivided, TCategory, TSort } from "./Movies";
 
-export const isValidYear = (year: number | null): year is TYear => {
-	if (!year || [1960, 1970, 1980, 1990, 2000, 2010, 2020].includes(year))
+export const isValidMovieList = ( list: string | null): list is TListTitle => {
+	if (!list || ['1960', '1970', '1980', '1990', '2000', '2010', '2020', "My list"].includes(list))
 		return (true);
 	return (false);
 }

@@ -1,7 +1,7 @@
 import { divideByCategory, getRandomSelection, sortBy, } from "./utils";
-import { TYear } from "./App";
+import { TListTitle } from "./App";
 import { useState } from "react";
-import { Button, Col, Container, Dropdown, Modal, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Row, Spinner } from "react-bootstrap";
 import { MovieCategory } from "./MovieCategory";
 import { MovieModal } from "./MovieModal";
 
@@ -19,9 +19,7 @@ export interface IMovie {
 
 interface IMoviesProps {
   movies: IMovie[] | null,
-  myList: IMovie[] | null,
-  year: TYear,
-  title: string
+  listTitle: TListTitle,
 }
 
 export type TCategory = string | number | null | undefined;
@@ -41,7 +39,7 @@ export enum TSort {
 
 export type TDisplayMode = "display-list" | "display-grid"
 
-export const Movies = ({ movies, myList, year, title }: IMoviesProps) => {
+export const Movies = ({ movies, listTitle }: IMoviesProps) => {
   const [sort, setSort] = useState<TSort>(TSort.ALPHA);
   const [displayMode, setDisplayMode] = useState<TDisplayMode>("display-list");
   const [movieModal, setMovieModal] = useState<IMovie | null>(null);
@@ -117,7 +115,7 @@ export const Movies = ({ movies, myList, year, title }: IMoviesProps) => {
 
       <Row className="mb-0">
         <Col>
-          <h2 className="text-primary">{ title }</h2>
+          <h2 className="text-primary">{ listTitle }</h2>
         </Col>
         <Col>
           <Dropdown>
