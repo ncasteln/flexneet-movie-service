@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Navigation from './Navigation';
-import { Button } from 'react-bootstrap';
+import { Button, Container, Spinner } from 'react-bootstrap';
 import {  IMovie } from './Movies';
 import { Movies } from './Movies';
 import { isValidMovieList } from './utils';
@@ -9,29 +9,41 @@ import { MyList } from './MyList';
 
 // https://github.com/prust/wikipedia-movie-data
 
-// export type TYear = 1960 | 1970 | 1980 | 1990 | 2000 | 2010 | 2020 | null;
 export type TListTitle = '1960' | '1970' | '1980' | '1990' | '2000' | '2010' | '2020' | "My list" | null;
 
 export default function App() {
-  // const [title, setTitle] = useState("2020");
   const [listTitle, setListTitle] = useState<TListTitle>("2020");
-  const [movies, setMovies] = useState<IMovie[] | null>(null);
+  const [catalogue, setCatalogue] = useState<IMovie[] | null>(null);
+  const [myList, setMyList] = useState<IMovie[] | null>(null);
 
   useEffect(() => {
-    async function fetchData() {
-      let response;
-      if (listTitle === "My list")
-        response = await fetch(`../data/movies-my-list.json`);
-      else
-        response = await fetch(`../data/movies-${listTitle}s.json`);
-      const newMovies: IMovie[] = await response.json();
-      setMovies(newMovies);
-      console.log(newMovies);
+    async function fetchMyList() {
+      let response = await fetch(`../data/movies-my-list.json`);
+      const myList: IMovie[] = await response.json();
+      setMyList(myList);
     }
 
     let timerId = setTimeout(() => { // added only to simulate the loading animation
-      console.info("Info: Fetching data in...");
-      fetchData();
+      console.info("Info: Fetching My list");
+      fetchMyList();
+    }, 2000);
+
+    return () => {
+      console.warn("Warning: clean up fetch()");
+      clearTimeout(timerId); }
+  }, []);
+
+  useEffect(() => {
+    async function fetchCatalogue() {
+      let response = await fetch(`../data/movies-${listTitle}s.json`);
+      const newCatalogue: IMovie[] = await response.json();
+      setCatalogue(newCatalogue);
+    }
+
+    let timerId = setTimeout(() => { // added only to simulate the loading animation
+      console.info("Info: Fetching Catalogue");
+      if (listTitle !== "My list")
+        fetchCatalogue();
     }, 2000);
 
     return () => {
@@ -48,9 +60,10 @@ export default function App() {
     }
 
     if (newListTitle != listTitle && isValidMovieList(newListTitle)) {
-      setMovies(null);
+      setCatalogue(null);
       setListTitle(newListTitle);
     }
+    scrollToTop();
   }
 
   const scrollToTop = () => { document.documentElement.scrollTop = 0; }
@@ -61,7 +74,12 @@ export default function App() {
         className={`position-fixed bottom-0 end-0 m-3`}
         onClick={scrollToTop}>top</Button>
       <Navigation onClick={handleClick} />
-      <Movies listTitle={listTitle} movies={movies} />
+      {
+        <Movies
+          listTitle={listTitle}
+          movies={listTitle === "My list" ? myList : catalogue}
+          setMyList={setMyList} />
+      }
     </>
   )
 }

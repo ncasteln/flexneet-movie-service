@@ -20,6 +20,7 @@ export interface IMovie {
 interface IMoviesProps {
   movies: IMovie[] | null,
   listTitle: TListTitle,
+  setMyList: React.Dispatch<React.SetStateAction<IMovie[] | null>>
 }
 
 export type TCategory = string | number | null | undefined;
@@ -39,21 +40,22 @@ export enum TSort {
 
 export type TDisplayMode = "display-list" | "display-grid"
 
-export const Movies = ({ movies, listTitle }: IMoviesProps) => {
+export const Movies = ({ movies, listTitle, setMyList }: IMoviesProps) => {
   const [sort, setSort] = useState<TSort>(TSort.ALPHA);
   const [displayMode, setDisplayMode] = useState<TDisplayMode>("display-list");
   const [movieModal, setMovieModal] = useState<IMovie | null>(null);
 
   const renderRandomMovies = () => {
     if (!movies)
-      throw new Error("Error: renderRandomMovies(): movies is null")
+      throw new Error("Warning: renderRandomMovies(): movies is null")
     const randomMovies: IMovie[] = getRandomSelection(movies);
     return (randomMovies)
   }
 
   const renderAllMovies = () => {
-    if (!movies)
+    if (!movies) {
       throw new Error("Error: renderAllMovies(): movies is null");
+    }
     const sortedMovies: IMovie[] | null = sortBy(movies, sort);
     if (!sortedMovies)
       throw new Error("Error: renderAllMovies(): sortedMovies is null");
@@ -135,12 +137,15 @@ export const Movies = ({ movies, listTitle }: IMoviesProps) => {
 
       {
         renderAllMovies().map(({ category, movies }) => {
-          return <MovieCategory
-            key={`movie-category-${category}`}
-            category={category}
-            movies={movies}
-            display={displayMode}
-            setMovieModal={setMovieModal} />
+          return (
+            <MovieCategory
+              key={`movie-category-${category}`}
+              category={category}
+              movies={movies}
+              display={displayMode}
+              setMovieModal={setMovieModal}
+              setMyList={setMyList} />
+          )
         })
       }
 
