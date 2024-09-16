@@ -8,12 +8,12 @@ interface IMovieTableProps {
 
 export const MovieTable = ({ movies, setMovieModal }: IMovieTableProps) => {
   return (
-    <Table striped bordered hover>
+    <Table striped hover variant="dark">
       <thead>
         <tr>
-          <th>Year</th>
-          <th>Title</th>
-          <th>Genre</th>
+          <th className="text-primary">Year</th>
+          <th className="text-primary">Title</th>
+          <th className="text-primary">Genre</th>
         </tr>
       </thead>
       <tbody>

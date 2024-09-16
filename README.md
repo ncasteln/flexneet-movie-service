@@ -51,12 +51,5 @@ useEffect(() => {
 ## Try it out!
 
 ## To do
-0) Add new paddings in custom.scss and recompile css file AND/OR use --watch flag in the continaer
-
-1) Style accuratley the grid/list view in MovieBlock.tsx:
-	- grid system and behavior
-	- list style and behavior
-2) <MyList /> component
-3) MoviePreview component:
-	- Open modal (MovieCard.tsx component to create) when clicked with all the data
-	- Set an "Image not available"
+- Set colors
+- Add MyList functionality to add-remove movies from personal list

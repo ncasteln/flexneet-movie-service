@@ -19,7 +19,9 @@ export interface IMovie {
 
 interface IMoviesProps {
   movies: IMovie[] | null,
-  year: TYear
+  myList: IMovie[] | null,
+  year: TYear,
+  title: string
 }
 
 export type TCategory = string | number | null | undefined;
@@ -39,7 +41,7 @@ export enum TSort {
 
 export type TDisplayMode = "display-list" | "display-grid"
 
-export const Movies = ({ movies, year }: IMoviesProps) => {
+export const Movies = ({ movies, myList, year, title }: IMoviesProps) => {
   const [sort, setSort] = useState<TSort>(TSort.ALPHA);
   const [displayMode, setDisplayMode] = useState<TDisplayMode>("display-list");
   const [movieModal, setMovieModal] = useState<IMovie | null>(null);
@@ -65,10 +67,11 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
   const renderSortOptions = () => {
     const sortOptions = Object.values(TSort);
     return (sortOptions.map((option, i) => {
-      return (<Dropdown.Item as={Button}
-        key={`sortOption-${i}`}
-        onClick={handleSort}>
-          {option}
+      return (
+        <Dropdown.Item as={Button}
+          key={`sortOption-${i}`}
+          onClick={handleSort}>
+            {option}
         </Dropdown.Item>)
     }))
   }
@@ -98,7 +101,7 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
     )
   }
   return (
-    <Container className="py-3 my-5 border"> {/* Change default p-5 or create a new class */}
+    <Container>
 
       {/* <h3>Suggested movies</h3> */}
       {/* {
@@ -112,13 +115,13 @@ export const Movies = ({ movies, year }: IMoviesProps) => {
         })
       } */}
 
-      <Row className="border">
-        <Col className="">
-          <h2 className="bg-warning">{year ? year : "My list"}</h2>
+      <Row className="mb-0">
+        <Col>
+          <h2 className="text-primary">{ title }</h2>
         </Col>
-        <Col className="">
+        <Col>
           <Dropdown>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
+            <Dropdown.Toggle variant="primary" id="dropdown-basic">
               List by: {sort}
             </Dropdown.Toggle>
             <Dropdown.Menu>

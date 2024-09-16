@@ -5,15 +5,13 @@ if npm list | grep -q 'empty'; then
 	cp /vite.config.ts /app/vite.config.ts;
 	rm -rf /vite.config.ts;
 	chmod -R o+w ./;
+
+  # dart-sass install ----- update <link href="output.css" rel="stylesheet">
+  wget -P ../  https://github.com/sass/dart-sass/releases/download/1.78.0/dart-sass-1.78.0-linux-x64.tar.gz;
+  gzip -d ../dart-sass-1.78.0-linux-x64.tar.gz;
+  tar -xvf ../dart-sass-1.78.0-linux-x64.tar -C ../;
+  echo "export PATH=/dart-sass:$PATH" >> ~/.bashrc;
 fi
 
 npm install;
 exec npm run dev;
-
-# apt-get install wget
-# wget https://github.com/sass/dart-sass/releases/download/1.78.0/dart-sass-1.78.0-linux-x64.tar.gz
-# extract gzip -d
-# extract tar -xvf
-# modify .bashrc with export PATH="[dart-sass-folder-path]:$PATH"
-# sass input.scss output.css
-# <link href="output.css" rel="stylesheet">

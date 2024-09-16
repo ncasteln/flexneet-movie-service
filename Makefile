@@ -13,7 +13,7 @@ R	:=	\033[0;31m
 W	:=	\033[0m
 N	:=	\033[1;30m
 
-.PHONY: up down build check display clean-cont clean-img stop bash
+.PHONY: up down build check display clean-cont clean-img stop bash sass
 
 ######################################################################
 
@@ -30,6 +30,10 @@ up: build
 build:
 	@echo "$(G)* Building the image...$(W)";
 	@docker build -t $(IMG_NAME) ./
+
+sass: check
+	@docker exec $(CONT_NAME) /dart-sass/sass scss/custom.scss scss/custom.min.css
+	@echo "$(G)* SASS recompiled...$(W)";
 
 # checker for running
 check:

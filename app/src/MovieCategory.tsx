@@ -13,8 +13,8 @@ interface MovieCategory {
 
 export const MovieCategory = ({ category, movies, display, setMovieModal }: MovieCategory) => {
   return (
-    <Row className="border border-primary">
-      <h3 className="pt-5" id={`category-${category?.toString()}`}>{ category }</h3>
+    <Row>
+      <h3 className="display-5 mb-0 mt-5 p-3 pt-5 bg-primary" id={`category-${category?.toString()}`}>{ category }</h3>
       {
         display === "display-grid"
           ? <MovieGrid movies={movies} setMovieModal={setMovieModal} />
