@@ -3,10 +3,11 @@ import { IMovie } from "./Movies"
 
 interface IMovieGrid {
   movies: IMovie[]
-  setMovieModal: React.Dispatch<React.SetStateAction<IMovie | null>>
+  setMovieModal: React.Dispatch<React.SetStateAction<IMovie | null>>,
+  isMyListRendered: boolean
 }
 
-export const MovieGrid = ({ movies, setMovieModal }: IMovieGrid) => {
+export const MovieGrid = ({ movies, setMovieModal, isMyListRendered }: IMovieGrid) => {
   return (
     <Row xs={6} sm={12}>
       { movies.map(movie => {

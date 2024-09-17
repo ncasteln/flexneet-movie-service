@@ -52,4 +52,4 @@ useEffect(() => {
 
 ## To do
 - Set colors
-- Add MyList functionality to add-remove movies from personal list
+- My List functionality: better create a separate component?

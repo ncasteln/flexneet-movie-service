@@ -1,16 +1,19 @@
-import { useEffect } from "react";
 import { IMovie } from "./Movies"
 import { Container } from "react-bootstrap";
 
 interface IMyList {
-  movies: IMovie[] | null
+  myList: IMovie[] | null,
+  setMyList: React.Dispatch<React.SetStateAction<IMovie[] | null>>
 }
 
-export const MyList = ({ movies } : IMyList) => {
+export const MyList = ({ myList, setMyList } : IMyList) => {
 
   return (
     <Container>
-      { movies ? "List has something" : "Empty list"}
+      { !myList
+        ? "Empty list"
+        : "Something----"
+      }
     </Container>
   )
 }

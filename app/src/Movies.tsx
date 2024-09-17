@@ -1,9 +1,11 @@
 import { divideByCategory, getRandomSelection, sortBy, } from "./utils";
-import { TListTitle } from "./App";
+import { TYear } from "./App";
 import { useState } from "react";
 import { Button, Col, Container, Dropdown, Row, Spinner } from "react-bootstrap";
 import { MovieCategory } from "./MovieCategory";
 import { MovieModal } from "./MovieModal";
+import { Toolbar } from "./Toolbar";
+import { MyList } from "./MyList";
 
 export interface IMovie {
   title: string,
@@ -18,8 +20,9 @@ export interface IMovie {
 }
 
 interface IMoviesProps {
-  movies: IMovie[] | null,
-  listTitle: TListTitle,
+  catalogue: IMovie[] | null,
+  myList: IMovie[] | null,
+  year: TYear,
   setMyList: React.Dispatch<React.SetStateAction<IMovie[] | null>>
 }
 
@@ -40,60 +43,68 @@ export enum TSort {
 
 export type TDisplayMode = "display-list" | "display-grid"
 
-export const Movies = ({ movies, listTitle, setMyList }: IMoviesProps) => {
+export const Movies = ({ catalogue, year, setMyList, myList }: IMoviesProps) => {
   const [sort, setSort] = useState<TSort>(TSort.ALPHA);
   const [displayMode, setDisplayMode] = useState<TDisplayMode>("display-list");
   const [movieModal, setMovieModal] = useState<IMovie | null>(null);
 
   const renderRandomMovies = () => {
-    if (!movies)
+    if (!catalogue)
       throw new Error("Warning: renderRandomMovies(): movies is null")
-    const randomMovies: IMovie[] = getRandomSelection(movies);
+    const randomMovies: IMovie[] = getRandomSelection(catalogue);
     return (randomMovies)
   }
 
-  const renderAllMovies = () => {
-    if (!movies) {
-      throw new Error("Error: renderAllMovies(): movies is null");
+  const isEmptyList = () => {
+    let movieList: IMovie[] | null = null;
+    if (year)
+      movieList = catalogue;
+    else
+      movieList = myList;
+    if (movieList?.length === 0)
+      return (true);
+    return (false);
+  }
+
+  const getAllMovies = () => {
+    if (!catalogue)
+      throw new Error("Error: getAllMovies(): movies is null");
+
+    let movieList: IMovie[] | null;
+    if (year)
+      movieList = catalogue;
+    else
+      movieList = myList;
+
+    const sortedMovies: IMovie[] | null = sortBy(movieList, sort);
+    if (!sortedMovies) {
+      if (year)
+        throw new Error("Error: getAllMovies(): sortedMovies is null");
+      else
+        return (
+          <div className="display-1">
+            Your list is empty!
+          </div>
+        );
     }
-    const sortedMovies: IMovie[] | null = sortBy(movies, sort);
-    if (!sortedMovies)
-      throw new Error("Error: renderAllMovies(): sortedMovies is null");
 
     const sortAndDivided: ISortedAndDivided[] = divideByCategory(sortedMovies, sort);
-    return (sortAndDivided);
-  }
-
-  const renderSortOptions = () => {
-    const sortOptions = Object.values(TSort);
-    return (sortOptions.map((option, i) => {
+    return (sortAndDivided.map(({ category, movies }) => {
       return (
-        <Dropdown.Item as={Button}
-          key={`sortOption-${i}`}
-          onClick={handleSort}>
-            {option}
-        </Dropdown.Item>)
-    }))
+        <MovieCategory
+          key={`movie-category-${category}`}
+          category={category}
+          movies={movies}
+          display={displayMode}
+          setMovieModal={setMovieModal}
+          setMyList={setMyList}
+          myList={myList}
+          isMyListRendered={year ? false : true} />
+      )
+    }));
   }
 
-  const handleSort = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    if (e.currentTarget.textContent) {
-      const sortOptions = Object.values(TSort);
-      const newSort = sortOptions.filter((value) => {
-        return (value === e.currentTarget.textContent)
-      })
-      setSort(newSort[0]);
-    }
-  }
-
-  const handleDisplayMode = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    if (e.currentTarget.id === "display-list" || e.currentTarget.id === "display-grid")
-      setDisplayMode(e.currentTarget.id);
-  }
-
-  if (!movies) {
+  if (!catalogue) {
     return (
       <Container className="py-3 my-5">
         <Spinner animation="border" variant="primary" />
@@ -115,39 +126,13 @@ export const Movies = ({ movies, listTitle, setMyList }: IMoviesProps) => {
         })
       } */}
 
-      <Row className="mb-0">
-        <Col>
-          <h2 className="text-primary">{ listTitle }</h2>
-        </Col>
-        <Col>
-          <Dropdown>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic">
-              List by: {sort}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              { renderSortOptions() }
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col className="d-flex justify-content-end gap-2">
-          <Button id="display-list" onClick={handleDisplayMode}>List</Button>
-          <Button id="display-grid" onClick={handleDisplayMode}>Grid</Button>
-        </Col>
-      </Row>
+      <Toolbar
+        title={year}
+        text={sort}
+        setSort={setSort}
+        setDisplayMode={setDisplayMode} />
 
-      {
-        renderAllMovies().map(({ category, movies }) => {
-          return (
-            <MovieCategory
-              key={`movie-category-${category}`}
-              category={category}
-              movies={movies}
-              display={displayMode}
-              setMovieModal={setMovieModal}
-              setMyList={setMyList} />
-          )
-        })
-      }
+      { getAllMovies() }
 
       <MovieModal
         movie={movieModal}

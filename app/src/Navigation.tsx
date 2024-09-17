@@ -29,7 +29,7 @@ export default function Navigation({ onClick }: INavigationProps) {
             <Nav className="me-auto">
               <Nav.Link onClick={(e) => onClick(e)} href="#">My list</Nav.Link>
               <NavDropdown title="Year" id="basic-nav-dropdown">
-                {calculateYears(onClick)}
+                { calculateYears(onClick) }
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>

@@ -3,13 +3,31 @@ import { IMovie } from "./Movies"
 
 interface IMovieTableProps {
   movies: IMovie[],
-  setMovieModal: React.Dispatch<React.SetStateAction<IMovie | null>>
-  setMyList: React.Dispatch<React.SetStateAction<IMovie[] | null>>
+  myList: IMovie[] | null,
+  setMovieModal: React.Dispatch<React.SetStateAction<IMovie | null>>,
+  setMyList: React.Dispatch<React.SetStateAction<IMovie[] | null>>,
+  isMyListRendered: boolean
 }
 
-export const MovieTable = ({ movies, setMovieModal, setMyList }: IMovieTableProps) => {
+export const MovieTable = ({ movies, myList, setMovieModal, setMyList, isMyListRendered }: IMovieTableProps) => {
+  const isMovieInMyList = (currentMovie: IMovie) => {
+    if (!myList)
+      return (false);
+    for (let i = 0; i < myList.length; i++) {
+      if (myList[i] === currentMovie)
+        return (true);
+    }
+    return (false);
+  }
+
   const handleClick = ( e: React.MouseEvent<HTMLButtonElement, MouseEvent>, movie: IMovie ) => {
     e.stopPropagation();
+
+    /*
+      MODIFY LOGIC TO ACHIEVE REMOVE OF AN ITEM
+      Maybe use a reducer to simplify a bit
+    */
+
     console.log("I ADD THE MOVIE: ", movie.title);
     setMyList(prevState => {
       if (!prevState)
@@ -37,7 +55,15 @@ export const MovieTable = ({ movies, setMovieModal, setMyList }: IMovieTableProp
                 <td>{movie.title}</td>
                 <td>{movie.genres.length > 0 ? movie.genres[0] : "<Empty>"}</td>
                 <td>
-                  <Button onClick={(e) => handleClick(e, movie)}>+</Button>
+                  <Button onClick={(e) => handleClick(e, movie)}>
+                    {
+                      isMyListRendered
+                        ? "-"
+                        : isMovieInMyList(movie)
+                          ? "-"
+                          : "+"
+                    }
+                  </Button>
                 </td>
               </tr>
             )

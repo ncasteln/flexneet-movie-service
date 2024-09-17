@@ -1,10 +1,10 @@
 import { ReactElement } from "react";
 import { NavDropdown } from "react-bootstrap";
-import { TListTitle } from "./App";
+import {  TYear } from "./App";
 import { IMovie, ISortedAndDivided, TCategory, TSort } from "./Movies";
 
-export const isValidMovieList = ( list: string | null): list is TListTitle => {
-	if (!list || ['1960', '1970', '1980', '1990', '2000', '2010', '2020', "My list"].includes(list))
+export const isValidYear = ( list: string | null): list is TYear => {
+	if (!list || ['1960', '1970', '1980', '1990', '2000', '2010', '2020'].includes(list))
 		return (true);
 	return (false);
 }
@@ -80,8 +80,10 @@ const sortByGenre = ( movies: IMovie[] ): IMovie[] => {
 	return (sortedArray);
 }
 
-export const sortBy = ( movies: IMovie[], sort: TSort ): IMovie[] | null => {
-	switch (sort) {
+export const sortBy = ( movies: IMovie[] | null, sort: TSort ): IMovie[] | null => {
+	if (!movies)
+    return (null);
+  switch (sort) {
 		case TSort.ALPHA:
 			return (movies.sort(AtoZ));
 		case TSort.ALPHA_REV:
