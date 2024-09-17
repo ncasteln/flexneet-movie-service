@@ -49,6 +49,11 @@ useEffect(() => {
 ```
 
 ## Try it out!
+The project uses a docker container. After cloning just `make` and access it thorugh http://localhost:8080.
+```bash
+git clone https://github.com/ncasteln/flexneet-movie-service;
+cd flexneet-movie-service && make;
+```
 
 ## To do
 - Set colors
