@@ -6,6 +6,7 @@ import { MovieCategory } from "./MovieCategory";
 import { MovieModal } from "./MovieModal";
 import { Toolbar } from "./Toolbar";
 import { MyList } from "./MyList";
+import { SuggestedMovies } from "./SuggestedMovies";
 
 export interface IMovie {
   title: string,
@@ -48,22 +49,11 @@ export const Movies = ({ catalogue, year, setMyList, myList }: IMoviesProps) => 
   const [displayMode, setDisplayMode] = useState<TDisplayMode>("display-list");
   const [movieModal, setMovieModal] = useState<IMovie | null>(null);
 
-  const renderRandomMovies = () => {
+  const getRandomMovies = () => {
     if (!catalogue)
-      throw new Error("Warning: renderRandomMovies(): movies is null")
+      throw new Error("Warning: getRandomMovies(): movies is null")
     const randomMovies: IMovie[] = getRandomSelection(catalogue);
     return (randomMovies)
-  }
-
-  const isEmptyList = () => {
-    let movieList: IMovie[] | null = null;
-    if (year)
-      movieList = catalogue;
-    else
-      movieList = myList;
-    if (movieList?.length === 0)
-      return (true);
-    return (false);
   }
 
   const getAllMovies = () => {
@@ -113,24 +103,17 @@ export const Movies = ({ catalogue, year, setMyList, myList }: IMoviesProps) => 
   }
   return (
     <Container>
-
-      {/* <h3>Suggested movies</h3> */}
-      {/* {
-        renderRandomMovies().map((movie, i) => {
-          return (
-            <div key={"random-movie-" + i}>
-              <small>{i}-{movie.title}</small>
-              <br />
-            </div>
-          )
-        })
-      } */}
-
       <Toolbar
         title={year}
         text={sort}
         setSort={setSort}
         setDisplayMode={setDisplayMode} />
+
+      {
+        year
+          ? <SuggestedMovies randomMovies={getRandomMovies()} />
+          : null
+      }
 
       { getAllMovies() }
 

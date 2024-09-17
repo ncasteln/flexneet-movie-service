@@ -22,18 +22,27 @@ export const MovieTable = ({ movies, myList, setMovieModal, setMyList, isMyListR
 
   const handleClick = ( e: React.MouseEvent<HTMLButtonElement, MouseEvent>, movie: IMovie ) => {
     e.stopPropagation();
-
-    /*
-      MODIFY LOGIC TO ACHIEVE REMOVE OF AN ITEM
-      Maybe use a reducer to simplify a bit
-    */
-
-    console.log("I ADD THE MOVIE: ", movie.title);
-    setMyList(prevState => {
-      if (!prevState)
-        return [movie]
-      return [ ...prevState, movie ]
-    })
+    if (e.currentTarget.textContent === "+") {
+      console.log("* ADDING...");
+      setMyList(prevState => {
+        if (!prevState)
+          return [movie]
+        return [ ...prevState, movie ]
+      })
+    }
+    else {
+      setMyList(prevState => {
+        console.log("* REMOVING...");
+        if (!prevState)
+          return (null);
+        const newState = prevState.filter(element => {
+          return (element !== movie);
+        });
+        if (newState.length === 0)
+          return (null);
+        return (newState);
+      })
+    }
   }
 
   return (

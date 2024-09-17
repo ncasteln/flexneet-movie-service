@@ -16,23 +16,6 @@ export default function App() {
   const [catalogue, setCatalogue] = useState<IMovie[] | null>(null);
   const [myList, setMyList] = useState<IMovie[] | null>(null);
 
-  // useEffect(() => {
-  //   async function fetchMyList() {
-  //     let response = await fetch(`../data/movies-my-list.json`);
-  //     const myList: IMovie[] = await response.json();
-  //     setMyList(myList);
-  //   }
-
-  //   let timerId = setTimeout(() => { // added only to simulate the loading animation
-  //     console.info("Info: Fetching My list");
-  //     fetchMyList();
-  //   }, 2000);
-
-  //   return () => {
-  //     console.warn("Warning: clean up fetch()");
-  //     clearTimeout(timerId); }
-  // }, []);
-
   useEffect(() => {
     if (!year) return ;
     async function fetchCatalogue() {
