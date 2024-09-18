@@ -1,6 +1,6 @@
 # flexneet-movie-service
 
-The pourpose of this project is to re-achieve frontend knowledge using React. The tech stack used to build it is quite simple: React as framework, Typescript, React-Bootstrap to style. The state is handled without any state mangaement tool, since it's not too big. The database is emulated using json data collected by [prust](https://github.com/prust/wikipedia-movie-data).
+The pourpose of this project is to re-achieve frontend knowledge using React. The tech stack used to build it is quite simple: React as framework, Typescript, React-Bootstrap to style. The state is handled without any state management tool, since it's not too big. The database is emulated using json data collected by [prust](https://github.com/prust/wikipedia-movie-data).
 
 The project emulates a blockbuster service in which is possible to list movies, add to a list of favourites, sort in different ways (alphabetical, year, genre), see the descriptions and their data.
 
@@ -30,23 +30,25 @@ Example: data fetching.
 In the following example, when the data is fecthed a timer to simulate a delay is used. Let's suppose that in this 3 seconds, the user causes the component to unmount, like changing page or performing actions which force the component to re-mount (in our case, changing the year of movies to display); if the clean-up function is not set correctly, the unmounted component fetching function would continue to execute its job. So if the user forces 10 times the component to re-mount, all the 10 data fetching would be performed, but what we want, is just one, the last one. In code snippet this clean-up calls just `clearTimout(timerId)` because the delay of the data fetch is emulated through `setTimeout()`. In real world examples, for example by using [AbortController API](https://developer.mozilla.org/en-US/docs/Web/API/AbortController), it could be necessary additional clean-ups.
 ```js
 useEffect(() => {
-	async function fetchData() {
-		const response = await fetch(`../data/movies-${year}s.json`);
-		const newMovies: IMovie[] = await response.json();
-		setMovies(newMovies);
-		console.log(newMovies);
-	}
+  async function fetchData() {
+    const response = await fetch(`../data/movies-${year}s.json`);
+    const newMovies: IMovie[] = await response.json();
+    setMovies(newMovies);
+  }
 
-	let timerId = setTimeout(() => {
-		console.log("Fetching data...")
-		fetchData();
-	}, 3000);
+  let timerId = setTimeout(() => {
+    console.log("Fetching data...")
+    fetchData();
+  }, 3000);
 
-	return () => {
-		console.log("! FETCHING ABORTED !");
-		clearTimeout(timerId); }
+  return () => {
+    console.log("! FETCHING ABORTED !");
+    clearTimeout(timerId); }
 }, [year])
 ```
+
+### react-bootstrap
+I used react-bootstrap to style the app, including various components like navbars, carousel and modals, and the bootstrap grid system. I modified the basic colors by installing _dart-sass_ into the container and recompiling the `.css` document used into `index.html`.
 
 ## Try it out!
 The project uses a docker container. After cloning just `make` and access it thorugh http://localhost:8080.
