@@ -1,15 +1,14 @@
 import { Button, Carousel, Image } from "react-bootstrap"
 import { IMovie } from "./Movies"
-import { useState } from "react";
-
 
 interface ISuggestedMoviesProps {
-  randomMovies: IMovie[],
+  randomMovies: IMovie[] | null,
+  setMovieModal: React.Dispatch<React.SetStateAction<IMovie | null>>
 }
 
-export const SuggestedMovies = ({ randomMovies }: ISuggestedMoviesProps) => {
+export const SuggestedMovies = ({ randomMovies, setMovieModal }: ISuggestedMoviesProps) => {
   const handleClick = ( movie: IMovie ) => {
-    /* Open Modal */
+    setMovieModal(movie);
   }
 
   return (
@@ -17,9 +16,10 @@ export const SuggestedMovies = ({ randomMovies }: ISuggestedMoviesProps) => {
       <h2 className="display-5 text-secondary mt-3">You might like...</h2>
       <div className="d-flex overflow-auto position-relative">
         {
-          randomMovies.map(movie => {
+          randomMovies?.map((movie, i) => {
             return (
               <Image
+                key={`random-movie-${i}`}
                 className="me-3"
                 src={movie.thumbnail}
                 height={180}

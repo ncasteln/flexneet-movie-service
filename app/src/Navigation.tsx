@@ -27,7 +27,7 @@ export default function Navigation({ onClick }: INavigationProps) {
     <header>
       <Navbar fixed="top" expand="sm" className={`${navBg ? "bg-primary" : "dark"} navbar-transition`} variant="dark">
         <Container>
-          <Navbar.Brand>
+          <Navbar.Brand href="http://localhost:8080">
           <img
             alt=""
             src="../public/vite.svg"

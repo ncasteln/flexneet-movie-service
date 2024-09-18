@@ -3,7 +3,7 @@ import Navigation from './Navigation';
 import { Button, Container, Spinner } from 'react-bootstrap';
 import {  IMovie } from './Movies';
 import { Movies } from './Movies';
-import { isValidYear } from './utils';
+import { getRandomSelection, isValidYear } from './utils';
 import "./App.css";
 
 // https://github.com/prust/wikipedia-movie-data
@@ -13,6 +13,7 @@ export type TYear = '1960' | '1970' | '1980' | '1990' | '2000' | '2010' | '2020'
 export default function App() {
   const [year, setYear] = useState<TYear>("2020");
   const [catalogue, setCatalogue] = useState<IMovie[] | null>(null);
+  const [randomMovies, setRandomMovies] = useState<IMovie[] | null>(null);
   const [myList, setMyList] = useState<IMovie[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,6 +44,18 @@ export default function App() {
     }
   }, [year])
 
+  useEffect(() => {
+    if (catalogue)
+      setRandomMovies(getRandomMovies());
+  }, [catalogue])
+
+  const getRandomMovies = () => {
+    if (!catalogue)
+      throw new Error("Warning: getRandomMovies(): movies is null")
+    const randomMovies: IMovie[] = getRandomSelection(catalogue);
+    return (randomMovies)
+  }
+
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (isLoading) return ; // avoid fetching problems
@@ -59,6 +72,7 @@ export default function App() {
     }
     if (newYear != year) {
       setCatalogue(null);
+      setRandomMovies(null);
       setYear(newYear);
     }
     scrollToTop();
@@ -76,6 +90,7 @@ export default function App() {
             </Container>
           : <Movies
               year={year}
+              randomMovies={randomMovies}
               catalogue={catalogue}
               myList={myList}
               setMyList={setMyList} />

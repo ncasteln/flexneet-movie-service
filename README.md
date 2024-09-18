@@ -57,6 +57,5 @@ cd flexneet-movie-service && make;
 
 ## To do
 - Set colors
-- My List functionality: better create a separate component?
-- navbar black that becomes yellow
 - put fallback images
+- randomMovies triggered too much
