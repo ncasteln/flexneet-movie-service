@@ -5,3 +5,7 @@
 
   background-color: inherit;
 }
+
+.navbar-transition {
+  transition: 0.1s linear;
+}
