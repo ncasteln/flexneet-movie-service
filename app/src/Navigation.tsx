@@ -3,10 +3,9 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { calculateYears } from './utils';
-import { Sidebar } from './Sidebar';
 
 interface INavigationProps {
-  onClick: React.MouseEventHandler<HTMLElement>
+  onClick: React.MouseEventHandler<HTMLElement>,
 }
 
 export default function Navigation({ onClick }: INavigationProps) {

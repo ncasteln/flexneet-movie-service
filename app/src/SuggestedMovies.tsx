@@ -15,7 +15,7 @@ export const SuggestedMovies = ({ randomMovies }: ISuggestedMoviesProps) => {
   return (
     <>
       <h2 className="display-5 text-secondary mt-3">You might like...</h2>
-      <div className="d-flex overflow-scroll position-relative">
+      <div className="d-flex overflow-auto position-relative">
         {
           randomMovies.map(movie => {
             return (

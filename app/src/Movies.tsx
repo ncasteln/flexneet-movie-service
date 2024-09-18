@@ -94,13 +94,6 @@ export const Movies = ({ catalogue, year, setMyList, myList }: IMoviesProps) => 
     }));
   }
 
-  if (!catalogue) {
-    return (
-      <Container className="py-3 my-5">
-        <Spinner animation="border" variant="primary" />
-      </Container>
-    )
-  }
   return (
     <Container>
       <Toolbar

@@ -5,7 +5,6 @@ import {  IMovie } from './Movies';
 import { Movies } from './Movies';
 import { isValidYear } from './utils';
 import "./App.css";
-import { MyList } from './MyList';
 
 // https://github.com/prust/wikipedia-movie-data
 
@@ -15,13 +14,22 @@ export default function App() {
   const [year, setYear] = useState<TYear>("2020");
   const [catalogue, setCatalogue] = useState<IMovie[] | null>(null);
   const [myList, setMyList] = useState<IMovie[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!year) return ;
+
+    setIsLoading(true);
     async function fetchCatalogue() {
+      try {
         let response = await fetch(`../data/movies-${year}s.json`);
         const newCatalogue: IMovie[] = await response.json();
         setCatalogue(newCatalogue);
+      } catch (error) {
+        console.error("Error: fatching failed: ", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     let timerId = setTimeout(() => { // added only to simulate the loading animation
@@ -31,16 +39,20 @@ export default function App() {
 
     return () => {
       console.warn("Warning: clean up fetch()");
-      clearTimeout(timerId); }
+      clearTimeout(timerId);
+    }
   }, [year])
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (isLoading) return ; // avoid fetching problems
+
     const newYear: string | null = e.currentTarget.textContent;
     if (!newYear) {
       console.warn("textContent is null");
       return ;
     }
+
     if (!isValidYear(newYear)) {
       setYear(null);
       return ;
@@ -57,11 +69,17 @@ export default function App() {
   return (
     <>
       <Navigation onClick={handleClick} />
-      <Movies
-        year={year}
-        catalogue={catalogue}
-        myList={myList}
-        setMyList={setMyList} />
+      {
+        !catalogue || isLoading
+          ? <Container className="py-3 my-5">
+              <Spinner animation="border" variant="primary" />
+            </Container>
+          : <Movies
+              year={year}
+              catalogue={catalogue}
+              myList={myList}
+              setMyList={setMyList} />
+      }
       <Button
         className={`position-fixed bottom-0 end-0 m-3`}
         onClick={scrollToTop}>top</Button>
