@@ -35,6 +35,7 @@ export const Toolbar =({ title, text, setDisplayMode, setSort }: IToolbar) => {
 
   const handleDisplayMode = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     if (e.currentTarget.id === "display-list" || e.currentTarget.id === "display-grid")
       setDisplayMode(e.currentTarget.id);
   }

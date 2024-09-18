@@ -54,8 +54,3 @@ The project uses a docker container. After cloning just `make` and access it tho
 git clone https://github.com/ncasteln/flexneet-movie-service;
 cd flexneet-movie-service && make;
 ```
-
-## To do
-- Set colors
-- put fallback images
-- randomMovies triggered too much

@@ -20,7 +20,7 @@ export const MovieModal = ({ movie, setMovieModal, setMyList }: IMovieModal) => 
           return [movie]
         return [ ...prevState, movie ]
       })
-      setAction("Remove from favourite")
+      setAction("Remove from favourite");
     }
     else {
       setMyList(prevState => {
@@ -33,8 +33,9 @@ export const MovieModal = ({ movie, setMovieModal, setMyList }: IMovieModal) => 
           return (null);
         return (newState);
       })
-      setAction("Add to favourite")
+      setAction("Add to favourite");
     }
+    setMovieModal(null);
   }
 
   return (

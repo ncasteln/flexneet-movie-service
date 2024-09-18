@@ -46,16 +46,9 @@ export enum TSort {
 export type TDisplayMode = "display-list" | "display-grid"
 
 export const Movies = ({ catalogue, randomMovies, year, setMyList, myList }: IMoviesProps) => {
-  const [sort, setSort] = useState<TSort>(TSort.ALPHA);
-  const [displayMode, setDisplayMode] = useState<TDisplayMode>("display-list");
+  const [sort, setSort] = useState<TSort>(TSort.GENRE);
+  const [displayMode, setDisplayMode] = useState<TDisplayMode>("display-grid");
   const [movieModal, setMovieModal] = useState<IMovie | null>(null);
-
-  // const getRandomMovies = () => {
-  //   if (!catalogue)
-  //     throw new Error("Warning: getRandomMovies(): movies is null")
-  //   const randomMovies: IMovie[] = getRandomSelection(catalogue);
-  //   return (randomMovies)
-  // }
 
   const getAllMovies = () => {
     if (!catalogue)
@@ -103,13 +96,13 @@ export const Movies = ({ catalogue, randomMovies, year, setMyList, myList }: IMo
         setSort={setSort}
         setDisplayMode={setDisplayMode} />
 
-      {
+      {/* {
         year
           ? <SuggestedMovies
               randomMovies={randomMovies}
               setMovieModal={setMovieModal} />
           : null
-      }
+      } */}
 
       { getAllMovies() }
 

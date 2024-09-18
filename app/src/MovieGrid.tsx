@@ -4,23 +4,19 @@ import { IMovie } from "./Movies"
 interface IMovieGrid {
   movies: IMovie[]
   setMovieModal: React.Dispatch<React.SetStateAction<IMovie | null>>,
-  isMyListRendered: boolean
 }
 
-export const MovieGrid = ({ movies, setMovieModal, isMyListRendered }: IMovieGrid) => {
+export const MovieGrid = ({ movies, setMovieModal }: IMovieGrid) => {
   return (
-    <Row xs={6} sm={12}>
-      { movies.map(movie => {
-        return (
-          <Col className="border" onClick={() => setMovieModal(movie)}>
-            <h5>{movie.title}</h5>
-            <Image
-              src={movie.thumbnail}
-              width={movie.thumbnail_width / 2}
-              height={movie.thumbnail_height / 2}
-              fluid/>
-          </Col>
-        )
+    <Row xs={2} sm={4} lg={6} className="m-auto">
+      { movies.map((movie, i) => {
+          return (
+            <Col className="mb-2" key={`movie-grid-${i}`} onClick={() => setMovieModal(movie)}>
+              <Image fluid
+                role="button"
+                src={movie.thumbnail ? movie.thumbnail : "../public/no-image.jpg"} />
+            </Col>
+          )
       })}
     </Row>
   )

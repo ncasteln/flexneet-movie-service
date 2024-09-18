@@ -44,7 +44,6 @@ export const getRandomSelection = ( movies: IMovie[] ): IMovie[] => {
 		randomMovies.push(movies[i]);
 	})
 
-	console.log("random: ", randomMovies);
 	return (randomMovies);
 }
 
