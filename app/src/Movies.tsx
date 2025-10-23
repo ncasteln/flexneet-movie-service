@@ -1,12 +1,10 @@
-import { divideByCategory, getRandomSelection, sortBy, } from "./utils";
+import { divideByCategory, sortBy, } from "./utils";
 import { TYear } from "./App";
 import { useState } from "react";
-import { Button, Col, Container, Dropdown, Row, Spinner } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { MovieCategory } from "./MovieCategory";
 import { MovieModal } from "./MovieModal";
 import { Toolbar } from "./Toolbar";
-import { MyList } from "./MyList";
-import { SuggestedMovies } from "./SuggestedMovies";
 
 export interface IMovie {
   title: string,
@@ -50,6 +48,7 @@ export const Movies = ({ catalogue, randomMovies, year, setMyList, myList }: IMo
   const [displayMode, setDisplayMode] = useState<TDisplayMode>("display-grid");
   const [movieModal, setMovieModal] = useState<IMovie | null>(null);
 
+  randomMovies;
   const getAllMovies = () => {
     if (!catalogue)
       throw new Error("Error: getAllMovies(): movies is null");

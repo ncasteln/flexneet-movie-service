@@ -1,4 +1,4 @@
-import { Button, Carousel, Image } from "react-bootstrap"
+import { Image } from "react-bootstrap"
 import { IMovie } from "./Movies"
 
 interface ISuggestedMoviesProps {

@@ -1,4 +1,3 @@
-import { EventHandler } from "react";
 import { Col, Row, Dropdown, Button } from "react-bootstrap"
 import { TDisplayMode, TSort } from "./Movies";
 

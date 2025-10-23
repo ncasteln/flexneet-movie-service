@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "flexneet-movie-service",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "homepage": "https://ncasteln.github.io/flexneet-movie-service",
   "dependencies": {
     "bootstrap": "^5.3.3",
     "react": "^18.3.1",
