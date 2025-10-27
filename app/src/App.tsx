@@ -23,7 +23,7 @@ export default function App() {
     setIsLoading(true);
     async function fetchCatalogue() {
       try {
-        let response = await fetch(`../data/movies-${year}s.json`);
+        let response = await fetch(`${import.meta.env.BASE_URL}/data/movies-${year}s.json`);
         const newCatalogue: IMovie[] = await response.json();
         setCatalogue(newCatalogue);
       } catch (error) {

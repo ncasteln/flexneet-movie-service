@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/MovieCategory.tsx","./src/MovieGrid.tsx","./src/MovieModal.tsx","./src/MovieTable.tsx","./src/Movies.tsx","./src/Navigation.tsx","./src/SuggestedMovies.tsx","./src/Toolbar.tsx","./src/main.tsx","./src/utils.tsx","./src/vite-env.d.ts"],"version":"5.9.3"}

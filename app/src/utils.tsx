@@ -24,7 +24,7 @@ export const calculateYears = ( onClick: React.MouseEventHandler<HTMLElement> ):
 }
 
 export async function fetchData( year: TYear ) {
-	const response = await fetch(`../data/movies-${year}s.json`);
+	const response = await fetch(`${import.meta.env.BASE_URL}/data/movies-${year}s.json`);
 	const newMovies = await response.json();
 	return (newMovies);
 }
